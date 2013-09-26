@@ -3996,7 +3996,16 @@ sub exec_cmd {
 	
 	print_cmd($cmd);
 	if (0 == $test) {
+		my $cwd = cwd();
+
+		# run $cmd from $HOME, allows unmounting of the snapshot root by
+		# cmd_postexec config option (see Debian Bug #660372)
+		chdir();
 		$return = system($cmd);
+
+		# return to the directory we were in before executing $cmd
+		chdir($cwd);
+
 		if (!defined($return)) {
 			print_err("Warning! exec_cmd(\"$cmd\") returned undef", 2);
 		}

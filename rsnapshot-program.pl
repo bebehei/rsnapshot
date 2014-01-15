@@ -1784,6 +1784,7 @@ sub parse_backup_opts {
 
 		# if we don't know about it, it doesn't exist
 		} else {
+			print_err("unknown per-backup-point option \"$name\"" );
 			return (undef);
 		}
 	}

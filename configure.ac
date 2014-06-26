@@ -309,6 +309,9 @@ AC_CONFIG_FILES(t/cmd-post_pre-exec/pre-true-post-false.conf:t/cmd-post_pre-exec
 AC_CONFIG_FILES(t/cmd-post_pre-exec/pre-true-post-true.conf:t/cmd-post_pre-exec/pre-true-post-true.conf.in)
 
 
+dnl Perl modules for regression test scripts
+AC_CONFIG_FILES(t/SysWrap.pm)
+
 dnl regression test scripts
 AC_CONFIG_FILES(t/configtest.t:t/configtest.t.in)
 AC_CONFIG_FILES(t/rsync.t:t/rsync.t.in)

@@ -1,3 +1,35 @@
+This file is intended for developers and packagers of rsnapshot,
+not for regular users of rsnapshot.
+
+Source code control
+-------------------
+
+The rsnapshot source code lives on Github:
+  https://github.com/DrHyde/rsnapshot
+
+The 'master' branch should be complete, by which we mean that there should
+be no half-completed features in it.  This means that anything which
+requires more than one commit should be done in a branch.
+
+Trivial changes (such as correcting spalling mistooks, or which change
+just one or two lines of code) can go straight into master.  Non-trivial
+changes should be reviewed by another developer, by raising a github
+"pull request".
+
+Releases and versions
+---------------------
+
+Releases should be done from branches, named for the release version,
+eg release-1.4.  The first release of that version should be tagged '1.4.0'.
+Subsequent releases of that version, which should contain no changes other
+than bugfixes and security fixes, should also be tagged as, eg, '1.4.1'.
+
+Bug tracker
+-----------
+
+The bug tracker and mailing lists are on Sourceforge:
+  https://sourceforge.net/projects/rsnapshot/
+
 RELEASE PROCEDURES
 --------------------------------------------
 
@@ -135,3 +167,38 @@ ftp> mput rsnapshot-<release>*
 Login to sourceforge as a project admin of rsnapshot and go to
 Admin -> File Releases.  Add a new release and add files to it. 
 
+
+Add a test case
+---------------
+These are some notes on how to add a new test case (XYZ) into rsnapshot.
+The contents of the test script are not covered here (yet).
+
+
+vi t/XYZ.t.in
+# Create test script
+
+vi t/support/etc/XYZ.conf.in
+# Create rsnapshot.conf for test (if required)
+
+cvs add t/XYZ.t.in t/support/etc/XYZ.conf.in
+
+vi configure.ac
+# Add
+>> AC_CONFIG_FILES(t/support/etc/XYZ.conf:t/support/etc/XYZ.conf.in)
+# and
+>> AC_CONFIG_FILES(t/XYZ.t:t/XYZ.t.in)
+
+./configure
+# To generate t/XYZ.t from t/XYZ.t.in etc
+# Note that starting 2009-11-21, "make test" will automatically generate
+# t/ABC.t from t/ABC.t.in, if needed.  This means you should not need to
+# run ./configure.
+
+make test
+# Verify that test works as expected - if not use vi and make test.
+
+cvs commit t/XYZ.t.in t/support/etc/XYZ.conf.in configure.ac
+# These files were directly updated
+
+cvs commit configure Makefile.in
+# These files would have been regenerated

@@ -26,8 +26,6 @@
 #                                                                      #
 ########################################################################
 
-# $Id: rsnapshot-program.pl,v 1.398 2008/08/09 02:15:49 djk20 Exp $
-
 # tabstops are set to 4 spaces
 # in vi, do: set ts=4 sw=4
 

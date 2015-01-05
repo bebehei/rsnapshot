@@ -188,6 +188,10 @@ $SIG{'TERM'}	= sub { bail('rsnapshot was sent TERM signal... cleaning up'); };
 # For a PIPE error, we dont want any more output so set $verbose less than 1.
 $SIG{'PIPE'}	= sub { $verbose = 0; bail('rsnapshot was sent PIPE signal... Hint: if rsnapshot is running from cron, check that mail is installed on this system, or redirect stdout and stderr in cron job'); };
 
+# hash used to register traps and execute in bail
+my %traps;
+$traps{"linux_lvm"} = 0;
+
 ########################################
 ###      CORE PROGRAM STRUCTURE      ###
 ########################################
@@ -1853,12 +1857,17 @@ sub bail {
 	if ((0 == $do_configtest) && (0 == $test) && defined($str) && ('' ne $str)) {
 		syslog_err($str);
 	}
+
+	# umount LVM Snapshot if it is mounted
+	if($traps{"linux_lvm"}){
+		linux_lvm_unmount();
+	}
 	
 	# get rid of the lockfile, if it exists
 	if(0 == $stop_on_stale_lockfile) {
 	        remove_lockfile();
 	}
-	
+
 	# exit showing an error
 	exit(1);
 }
@@ -3528,11 +3537,15 @@ sub rsync_backup_point {
                 bail("Mount LVM snapshot failed: $result");
             }
         }
-        
+
         
         # rewrite src to point to mount path
         # - to avoid including the mountpath in the snapshot, change the working directory and use a relative source
-        $linux_lvm_oldpwd = $ENV{PWD};
+        $linux_lvm_oldpwd = cwd();
+
+				# setup a trap, that the lvm_snapshot will get umounted after failure
+				$traps{"linux_lvm"} = 1;
+
         print_cmd("chdir($config_vars{'linux_lvm_mountpath'})");
         if (0 == $test) {
             $result = chdir($config_vars{'linux_lvm_mountpath'});
@@ -3542,7 +3555,9 @@ sub rsync_backup_point {
         }
 
         $src = './' .  $linux_lvmpath;
-        $linux_lvm = 1;
+				# the LVM has to get unmounted if the scripts breaks
+				$traps{"linux_lvm"} = 1;
+
 		
 	# this should have already been validated once, but better safe than sorry
 	} else {
@@ -3667,47 +3682,60 @@ sub rsync_backup_point {
 	}
 	
 	# unmount and drop snapshot if required
-	if ($linux_lvm) {
-	
-        print_cmd("chdir($linux_lvm_oldpwd)");
-        if (0 == $test) {
-            $result = chdir($linux_lvm_oldpwd);
-            if (0 == $result) {
-            bail("Could not change directory to \"$linux_lvm_oldpwd\"");
-            }
-        }
+	if ($traps{"linux_lvm"}) {
+		linux_lvm_unmount();
+	}
+}
 
-        @cmd_stack = ();
-        push(@cmd_stack, split(' ', $config_vars{'linux_lvm_cmd_umount'}));
+# 
+#
+# accepts no parameter
+# returns nothing
+sub linux_lvm_unmount(){
 
-        push(@cmd_stack, $config_vars{'linux_lvm_mountpath'});
-        
-        print_cmd(@cmd_stack);
-        if (0 == $test) {
-            $result = system(@cmd_stack);
-            
-            if ($result != 0) {
-                bail("Unmount LVM snapshot failed: $result");
-            }
-        }
+	# unset the trap immediately, as we could get otherwise a loop
+	# when a part of linux_lvm_unmount fails and bail gets called,
+	# which will call linux_lvm_unmount
+	$traps{"linux_lvm"} = 0;
 
-        @cmd_stack = ();
-        push(@cmd_stack, $config_vars{'linux_lvm_cmd_lvremove'});
+  print_cmd("chdir($linux_lvm_oldpwd)");
+  if (0 == $test) {
+      $result = chdir($linux_lvm_oldpwd);
+      if (0 == $result) {
+      bail("Could not change directory to \"$linux_lvm_oldpwd\"");
+      }
+  }
 
-        push(@cmd_stack, '--force');
-        push(@cmd_stack, $linux_lvm_snapshotname);
-        
-        print_cmd(@cmd_stack);
-        if (0 == $test) {
-            # silence gratuitous lvremove output
-            #$result = system(@cmd_stack);
-            $result = system(join " ", @cmd_stack, ">/dev/null");
-            
-            if ($result != 0) {
-                bail("Removal of LVM snapshot failed: $result");
-            }
-        }
-    }
+  @cmd_stack = ();
+  push(@cmd_stack, split(' ', $config_vars{'linux_lvm_cmd_umount'}));
+
+  push(@cmd_stack, $config_vars{'linux_lvm_mountpath'});
+  
+  print_cmd(@cmd_stack);
+  if (0 == $test) {
+      $result = system(@cmd_stack);
+      
+      if ($result != 0) {
+          bail("Unmount LVM snapshot failed: $result");
+      }
+  }
+
+  @cmd_stack = ();
+  push(@cmd_stack, $config_vars{'linux_lvm_cmd_lvremove'});
+
+  push(@cmd_stack, '--force');
+  push(@cmd_stack, $linux_lvm_snapshotname);
+  
+  print_cmd(@cmd_stack);
+  if (0 == $test) {
+      # silence gratuitous lvremove output
+      #$result = system(@cmd_stack);
+      $result = system(join " ", @cmd_stack, ">/dev/null");
+      
+      if ($result != 0) {
+          bail("Removal of LVM snapshot failed: $result");
+      }
+  }
 }
 
 # accepts the name of the argument to split, and its value

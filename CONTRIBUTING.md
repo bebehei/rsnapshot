@@ -66,23 +66,19 @@ Here is a model presented for release 1.4.0. Make sure, that you start
 on the master-branch and have a clean working-directory!
 
 1.  You start branching out of the master-branch
-
-    `git checkout -b release-1-4`
+    - `git checkout -b release-1-4`
 
 2.  If there are necessary changes to do before release, make them and commit them now.
-
-    `git add -A`
-    `git commit -m "Finish Release v1.4.0"`
+    - `git add -A`
+    - `git commit -m "Finish Release v1.4.0"`
 
 3.  tag the commit with git and push it to repo
-
-    `git tag 1.4.0`
-    `git push --tags`
+    - `git tag 1.4.0`
+    - `git push --tags`
 
 4.  Now generate the configure-file with autogen.sh and make the release-tarball
-
-    `./autogen.sh`
-    `make dist`
+    - `./autogen.sh`
+    - `make dist`
 
 5.  Now upload the tarball to the github-page for the specific version.
 

@@ -49,9 +49,7 @@ If it is not the case, please rebase/revise your branch. After reviewing your ch
 
 Create a new branch, prefix it with `issue/` and - if available - the github issue number. (e.g. `issue/35-umount-lvm`).
 
-Add your commits to the branch. They should be logically ordered and clean. Rebase them, if neccessary. Make sure that `make tests` passes. After finishing, open a pull-request and the code is taken for review.
-
-After a project-member verified your changes they can get merged in. The project-member should go on now, merge the branch also in the current release-branches and release new bugfix-versions.
+Add your commits to the branch. They should be logically ordered and clean. Rebase them, if neccessary. Make sure that `make test` passes. Finished? Open a pull-request! The code will get reviewed. If the review passes, a project-member will merge it onto `master` and the release-branches and release new bugfix-versions.
 
 ## Releases and versions
 ### release-branches
@@ -59,12 +57,10 @@ After a project-member verified your changes they can get merged in. The project
 Releases should be done from branches, named for the release version,
 e.g. release-1.4. The first release of that version should be tagged `1.4.0`.
 Subsequent releases of that version, which should contain no changes other
-than bugfixes and security fixes, should also be tagged as, eg, `1.4.1`.
+than bugfixes and security fixes, should also be tagged, e.g. `1.4.1`.
 
-//unsure, depends on further development
-Depending on the activity of rsnapshot, for every merged bugfix-branch, a bugfix-release should be done.
+At the end, there should be for every release a branch like `release-X-X`. The sub-releases should only get tagged on their specific branches.
 
-At the end, we have 3 types of branches: feature-branches and bugfix-branches; master, where every finished branch gets merged in 
 ### release-model in practice
 Here is a model presented for release 1.4.0. Make sure, that you start
 on the master-branch and have a clean working-directory!

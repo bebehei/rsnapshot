@@ -33,7 +33,11 @@ upgrade:
 
 clean:
 	rm -rf rsnapshot-$(VERSION)/
+<<<<<<< HEAD
 	rm -f  $(man_MANS)
+=======
+	rm -f rsnapshot.1 rsnapshot-diff.1
+>>>>>>> 4103ab7b17cdee7b1854c5fcb4f4fe1c7f0d4875
 	rm -rf autom4te.cache
 	rm -f rsnapshot-$(VERSION).tar.gz
 	rm -f rsnapshot-$(VERSION)-$(RPM_RELEASE).noarch.rpm

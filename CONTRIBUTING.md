@@ -34,6 +34,8 @@ If you checked rsnapshot out of the git-repository, you have to generate the con
 ## Development
 The `master` branch should be complete, by which we mean that there should be no half-completed features in it. Any development-work should be done in a branch. Those single branches should have only a single feature or bugfix in it. 
 
+![The branch-model in general](./contrib/branchtree.svg)
+
 ### Adding features
 
 Fork the repository and open a new branch prefixed with `feature/`. Keep the name short and descriptive. Before opening a Pull-Request against the main repository, make sure that:

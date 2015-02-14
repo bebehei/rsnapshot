@@ -29,6 +29,7 @@ If you are installing for the first time (and just want the defaults):
     Run these commands for a quick installation from source code:
     (skip these commands if you have installed rpm or debian package)
 
+	./autogen.sh
         ./configure --sysconfdir=/etc
         su
         make install

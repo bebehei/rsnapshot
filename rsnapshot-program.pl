@@ -2246,6 +2246,8 @@ sub add_lockfile {
 		exit(1);
 	}
 	
+	my $free = "false";
+	do {
 	# does a lockfile already exist?
         if (1 == is_real_local_abs_path($lockfile)) {
             if(!open(LOCKFILE, $lockfile)) {
@@ -2259,7 +2261,11 @@ sub add_lockfile {
             if(kill(0, $pid)) {
                 print_err ("Lockfile $lockfile exists and so does its process, can not continue");
                 syslog_err("Lockfile $lockfile exists and so does its process, can not continue");
-                exit(1);
+                if(1 == $config_vars{'wait_for_lock'}){
+                    $free = "false";
+                } else {
+                    exit(1);
+                }
             } else {
 		if(1 == $stop_on_stale_lockfile) {
 		    print_err ("Stale lockfile $lockfile detected. You need to remove it manually to continue", 1);
@@ -2269,10 +2275,14 @@ sub add_lockfile {
 	            print_warn("Removing stale lockfile $lockfile", 1);
 		    syslog_warn("Removing stale lockfile $lockfile");
 		    remove_lockfile();
+		    $free = "true";
 	        }
             }
-        }
-
+	} else {
+		$free = "true";
+	}
+	} while(1 == $config_vars{'wait_for_lock'} && $free == "false");
+	undef $free;
 	
 	# create the lockfile
 	print_cmd("echo $$ > $lockfile");

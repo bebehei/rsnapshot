@@ -1762,15 +1762,25 @@ sub parse_backup_opts {
 				return (undef);
 			}
 			
+			# FIXME TODO #thisisbad #nevermergethisintorealproject
+			# #badquickfix this is really bad. We have to change the datastructure of %config_vars
+			# and remove the whole $rsync_include_file_args-string and add this to %config_vars
+			my $arg1 = 'exclude_file';
+			my $arg2 = 'rsync_long_args';
+			if(1 == $additive){
+			        $arg1 = 'extra_' . $arg1;
+			        $arg2 = 'extra_' . $arg2;
+			}
+
 			# coerce into rsync_include_file_args
 			# then remove the "exclude_file" key/value pair
-			if (!defined($rsync_include_file_args)) {
-				$rsync_include_file_args = "--exclude-from=$parsed_opts{'exclude_file'}";
+			if (!defined($parsed_opts{$arg2})) {
+			        $parsed_opts{$arg2} = "--exclude-from=$parsed_opts{$arg1}";
 			} else {
-				$rsync_include_file_args .= " --exclude-from=$parsed_opts{'exclude_file'}";
+			        $parsed_opts{$arg2} .= " --exclude-from=$parsed_opts{$arg1}";
 			}
 			
-			delete($parsed_opts{'exclude_file'});
+			delete($parsed_opts{$arg1});
 
 		# Not (yet?) implemented as per-backup-point options
 		} elsif ( $name eq 'cmd_preexec' || $name eq 'cmd_postexec' 

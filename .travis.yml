@@ -6,6 +6,7 @@ perl:
   - "5.20"
 install:
   - sudo apt-get install automake
+  - find /usr -name compile 2>/dev/null
   - "./autogen.sh"
   - "./configure"
 before_script:

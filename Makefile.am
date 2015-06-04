@@ -78,10 +78,8 @@ rsnapshot-$(VERSION).tar.gz: $(man_MANS) Makefile $(bin_SCRIPTS) $(sysconf_DATA)
 
 test-tar: tar
 	tar xf rsnapshot-$(VERSION).tar.gz --directory /tmp 
-	pwd
-	cd /tmp/rsnapshot-$(VERSION)
-	pwd
-	./configure && make && make test
+	cd /tmp/rsnapshot-$(VERSION) && pwd && \
+		./configure && make && make test
 
 # If you lack GNU make, you could use "test_cases = t/*.t" as an approximation.
 test_cases_in := $(wildcard t/*.t.in)

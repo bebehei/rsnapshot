@@ -77,7 +77,7 @@ rsnapshot-$(VERSION).tar.gz: $(man_MANS) Makefile $(bin_SCRIPTS) $(sysconf_DATA)
 	@echo
 
 test-tar: tar
-	tar xf -d /tmp rsnapshot-$(VERSION).tar.gz
+	tar xf rsnapshot-$(VERSION).tar.gz --directory /tmp 
 	cd /tmp/rsnapshot-$(VERSION)
 	./configure && make && make test
 

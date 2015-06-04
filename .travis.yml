@@ -8,6 +8,7 @@ install:
   - sudo apt-get install automake
   - find /usr -name compile 2>/dev/null
   - "./autogen.sh"
+  - "./autogen.sh"
   - "./configure"
 before_script:
   # Allow us to SSH passwordless to localhost

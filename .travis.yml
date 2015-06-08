@@ -19,6 +19,7 @@ script:
   - cat /tmp/*
   - echo /tmp/*
   - ./testscript.sh
+  - perl rsnapshot -D -c t/configtest/conf/configtest.conf  hourly
 before_deploy:
   - make tar
 deploy:

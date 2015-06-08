@@ -18,6 +18,7 @@ script:
   - cat /tmp/testtravis
   - cat /tmp/*
   - echo /tmp/*
+  - ./testscript.sh
 before_deploy:
   - make tar
 deploy:

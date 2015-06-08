@@ -5,6 +5,6 @@ use Test::More tests => 1;
 use SysWrap;
 
 # check for basic configtest
-my $rc = rsnapshot("-c t/configtest/conf/configtest.conf hourly");
+my $rc = rsnapshot("-c t/configtest/conf/configtest.conf -D  hourly 1>&2");
 print STDERR "$rc exit\n";
 ok(0 == $rc);

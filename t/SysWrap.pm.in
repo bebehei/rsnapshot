@@ -15,7 +15,7 @@ sub execute {
 sub rsnapshot {
 	my $args = shift(@_);
 
-	return execute("@PERL@ ./rsnapshot $args >/dev/null 2>&1");
+	return execute("@PERL@ ./rsnapshot $args");
 }
 
 1;

@@ -1,8 +1,7 @@
 config_version	1.2
 snapshot_root	@CWD@/t/support/snapshots/
-verbose	6
-loglevel	6
-logfile /tmp/testtmp
+verbose	5
+loglevel	5
 cmd_rsync		@RSYNC@
 interval		hourly	6
 backup			@CWD@/t/support/files/a/	localhost/

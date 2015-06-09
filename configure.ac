@@ -326,6 +326,7 @@ AC_CONFIG_FILES(t/ssh_args/ssh_args.t:t/ssh_args/ssh_args.t.in)
 
 dnl Perl modules for regression test scripts
 AC_CONFIG_FILES(t/SysWrap.pm)
+AC_CONFIG_FILES(travistest.sh)
 
 AC_OUTPUT
 

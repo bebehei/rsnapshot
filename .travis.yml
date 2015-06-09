@@ -20,6 +20,7 @@ script:
   - echo /tmp/*
   - ./testscript.sh
   - perl rsnapshot -D -c t/configtest/conf/configtest.conf  hourly
+  - sh ./travistest.sh
 before_deploy:
   - make tar
 deploy:

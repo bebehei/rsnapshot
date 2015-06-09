@@ -3,7 +3,7 @@
 @PERL@ ./rsnapshot -D -c t/configtest/conf/configtest.conf  hourly 2>&1 > /tmp/testtravis
 echo "exit $?"
 
-@PERL@ ./rsnapshot -D -c t/configtest/conf/configtest.conf
+@PERL@ ./rsnapshot -D -c t/configtest/conf/configtest.conf hourly
 echo "exit $?"
 cat $0
 cat /tmp/testtravis

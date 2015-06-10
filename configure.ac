@@ -303,8 +303,6 @@ AC_CONFIG_FILES(t/cmd-post_pre-exec/conf/pre-false-post-true.conf:t/cmd-post_pre
 AC_CONFIG_FILES(t/cmd-post_pre-exec/conf/pre-true-post-false.conf:t/cmd-post_pre-exec/conf/pre-true-post-false.conf.in)
 AC_CONFIG_FILES(t/cmd-post_pre-exec/conf/pre-true-post-true.conf:t/cmd-post_pre-exec/conf/pre-true-post-true.conf.in)
 
-AC_CONFIG_FILES(t/configtest/conf/configtest.conf:t/configtest/conf/configtest.conf.in)
-AC_CONFIG_FILES(t/configtest/configtest.t:t/configtest/configtest.t.in)
 
 AC_CONFIG_FILES(t/gnu_cp/conf/gnu_cp.conf:t/gnu_cp/conf/gnu_cp.conf.in)
 AC_CONFIG_FILES(t/gnu_cp/gnu_cp.t:t/gnu_cp/gnu_cp.t.in)

@@ -239,7 +239,8 @@ if ($cmd eq 'configtest') {
 }
 
 # parse config file (if it exists), note: we can't parse a directory
-if (defined($config_file) && (-r $config_file) && (! -d $config_file)) {
+if (defined($config_file) && (-r $config_file) && (!-d $config_file)) {
+
 	# if there is a problem, this subroutine will exit the program and notify the user of the error
 	parse_config_file();
 	validate_config_file();
@@ -2746,12 +2747,13 @@ sub exit_configtest {
 # exits with a return code of 1
 sub exit_no_config_file {
 
-	if( -d $config_file ){
+	if (-d $config_file) {
 		print STDERR "Can't read the config file: \"$config_file\" is a directory.\n";
 		if (0 == $do_configtest) {
 			syslog_err("Can't read the config file: \"$config_file\" is a directory.\n");
 		}
-	} else {
+	}
+	else {
 		# warn that the config file could not be found
 		print STDERR "Config file \"$config_file\" does not exist or is not readable.\n";
 		if (0 == $do_configtest) {
@@ -3199,21 +3201,26 @@ sub handle_interval {
 	}
 
 	# if use_lazy_delete is on, delete the _delete.$$ directory
-	# we just check for the directory, it will have been created or not depending on the value of use_lazy_delete
-	if (-d "$config_vars{'snapshot_root'}/_delete.$$") {
+	if ($use_lazy_deletes) {
 
-		# this is the last thing to do here, and it can take quite a while.
+		# Besides the _delete.$$ directory, the lockfile has to be removed as well.
+		# The reason is that the last task to do in this subroutine is to delete the _delete.$$ directory, and it can take quite a while.
 		# we remove the lockfile here since this delete shouldn't block other rsnapshot jobs from running
 		remove_lockfile();
 
-		# start the delete
-		display_rm_rf("$config_vars{'snapshot_root'}/_delete.$$");
-		if (0 == $test) {
-			my $result = rm_rf("$config_vars{'snapshot_root'}/_delete.$$");
-			if (0 == $result) {
-				bail("Error! rm_rf(\"$config_vars{'snapshot_root'}/_delete.$$\")\n");
+		# Check for the directory. It might not exist, e.g. in case of the 'sync' command.
+		if (-d "$config_vars{'snapshot_root'}/_delete.$$") {
+
+			# start the delete
+			display_rm_rf("$config_vars{'snapshot_root'}/_delete.$$");
+			if (0 == $test) {
+				my $result = rm_rf("$config_vars{'snapshot_root'}/_delete.$$");
+				if (0 == $result) {
+					bail("Error! rm_rf(\"$config_vars{'snapshot_root'}/_delete.$$\")\n");
+				}
 			}
-		} else {
+		}
+		else {
 			# only spit this out if lazy deletes are turned on.
 			# Still need to suppress this if they're turned on but we've
 			# not done enough backups to yet need to delete anything
